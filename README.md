@@ -45,6 +45,73 @@ run('rule-name', rule, {
 })
 ```
 
+<details>
+<summary><b>Feature Extensions</b></summary>
+
+#### `output`
+
+`output` field can be a function to do custom assertion. This would also be compatible with snapshot testing.
+
+```ts
+import { run } from 'eslint-vitest-rule-tester'
+import { expect } from 'vitest'
+
+run('rule-name', rule, {
+  invalid: [
+    {
+      input: 'let foo = 1',
+      output(output) {
+        expect(output)
+          .toMatchInlineSnapshot(`"const foo = 1;"`)
+      },
+    },
+  ],
+})
+```
+
+#### `errors`
+
+`errors` field can be a function to do custom assertion, same as `output`.
+
+```ts
+import { run } from 'eslint-vitest-rule-tester'
+import { expect } from 'vitest'
+
+run('rule-name', rule, {
+  invalid: [
+    {
+      input: 'let foo = 1',
+      errors(errors) {
+        expect(errors.map(e => e.messageId))
+          .toMatchInlineSnapshot(`["error-message-id"]`)
+      },
+    },
+  ],
+})
+```
+
+#### `onResult` hook
+
+`onResult` field can be an function to do custom assertion with the entire result object.
+
+```ts
+import { run } from 'eslint-vitest-rule-tester'
+import { expect } from 'vitest'
+
+run('rule-name', rule, {
+  invalid: [
+    'let foo = 1',
+  ],
+  onResult(testCase, result) {
+    if (testCase.type === 'invalid')
+      expect(result).toMatchSnapshot()
+    // here you can't use `toMatchInlineSnapshot` because it's not in the test case
+  },
+})
+```
+
+</details>
+
 ### Explicit Test Suites
 
 ```ts
