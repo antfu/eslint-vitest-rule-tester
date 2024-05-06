@@ -25,8 +25,8 @@ export function unindent(str: TemplateStringsArray) {
 export function normalizeTestCase(c: TestCase, type?: 'valid' | 'invalid'): NormalizedTestCase {
   const obj = typeof c === 'string'
     ? { code: c }
-    : c
+    : { ...c }
   const normalized = obj as NormalizedTestCase
-  normalized.type ||= type || ('errors' in obj || 'output' in obj) ? 'invalid' : 'valid'
+  normalized.type ||= type || (('errors' in obj || 'output' in obj) ? 'invalid' : 'valid')
   return normalized
 }

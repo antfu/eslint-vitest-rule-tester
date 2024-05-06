@@ -89,7 +89,6 @@ export interface RuleTesterOptions {
    * @default true
    */
   verifyAfterFix?: boolean
-
 }
 
 export interface RuleTesterClassicOptions {

@@ -133,6 +133,9 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
         expect(result.output, 'output').toBe(_case.output)
     }
 
+    if (_case.type === 'invalid' && _case.output === undefined && _case.errors === undefined)
+      throw new Error(`Invalid test case must have either 'errors' or 'output' property`)
+
     if (verifyAfterFix && result.fixed) {
       const messages = linter.verify(
         result.output!,
