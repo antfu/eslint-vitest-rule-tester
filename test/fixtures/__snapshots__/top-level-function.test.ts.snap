@@ -1,57 +1,57 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`invalid > const foo = (as: string, bar: number) => { return as + bar } 1`] = `"function foo (as: string, bar: number) { return as + bar }"`;
+exports[`top-level-function > invalid > const foo = (as: string, bar: number) => { return as + bar } 1`] = `"function foo (as: string, bar: number) { return as + bar }"`;
 
-exports[`invalid > const foo = (x, y) => 
+exports[`top-level-function > invalid > const foo = (x, y) => 
 x + y 1`] = `
 "function foo (x, y) {
   return x + y
 }"
 `;
 
-exports[`invalid > const foo = <K, T extends Boolean>(as: string, bar: number): Omit<T, K> => 
+exports[`top-level-function > invalid > const foo = <K, T extends Boolean>(as: string, bar: number): Omit<T, K> => 
 as + bar 1`] = `
 "function foo <K, T extends Boolean>(as: string, bar: number): Omit<T, K> {
   return as + bar
 }"
 `;
 
-exports[`invalid > export const foo = () => 
+exports[`top-level-function > invalid > export const foo = () => 
 ({}) 1`] = `
 "export function foo () {
   return {}
 }"
 `;
 
-exports[`invalid > export const foo = () => {} 1`] = `"export function foo () {}"`;
+exports[`top-level-function > invalid > export const foo = () => {} 1`] = `"export function foo () {}"`;
 
-exports[`invalid > export const foo = async () => 
+exports[`top-level-function > invalid > export const foo = async () => 
 ({}) 1`] = `
 "export async function foo () {
   return {}
 }"
 `;
 
-exports[`valid > ;(() => {})() 1`] = `";(() => {})()"`;
+exports[`top-level-function > valid > ;(() => {})() 1`] = `";(() => {})()"`;
 
-exports[`valid > const Foo: Bar = () => {} 1`] = `"const Foo: Bar = () => {}"`;
+exports[`top-level-function > valid > const Foo: Bar = () => {} 1`] = `"const Foo: Bar = () => {}"`;
 
-exports[`valid > const foo = (() => {}) as any 1`] = `"const foo = (() => {}) as any"`;
+exports[`top-level-function > valid > const foo = (() => {}) as any 1`] = `"const foo = (() => {}) as any"`;
 
-exports[`valid > const foo = () => ({}) 1`] = `"const foo = () => ({})"`;
+exports[`top-level-function > valid > const foo = () => ({}) 1`] = `"const foo = () => ({})"`;
 
-exports[`valid > const foo = () => String(123) 1`] = `"const foo = () => String(123)"`;
+exports[`top-level-function > valid > const foo = () => String(123) 1`] = `"const foo = () => String(123)"`;
 
-exports[`valid > const foo = (x, y) => x + y 1`] = `"const foo = (x, y) => x + y"`;
+exports[`top-level-function > valid > const foo = (x, y) => x + y 1`] = `"const foo = (x, y) => x + y"`;
 
-exports[`valid > const foo = async (x, y) => x + y 1`] = `"const foo = async (x, y) => x + y"`;
+exports[`top-level-function > valid > const foo = async (x, y) => x + y 1`] = `"const foo = async (x, y) => x + y"`;
 
-exports[`valid > export default () => {} 1`] = `"export default () => {}"`;
+exports[`top-level-function > valid > export default () => {} 1`] = `"export default () => {}"`;
 
-exports[`valid > export default defineConfig(() => {}) 1`] = `"export default defineConfig(() => {})"`;
+exports[`top-level-function > valid > export default defineConfig(() => {}) 1`] = `"export default defineConfig(() => {})"`;
 
-exports[`valid > function foo() { const bar = () => {} } 1`] = `"function foo() { const bar = () => {} }"`;
+exports[`top-level-function > valid > function foo() { const bar = () => {} } 1`] = `"function foo() { const bar = () => {} }"`;
 
-exports[`valid > function foo() {} 1`] = `"function foo() {}"`;
+exports[`top-level-function > valid > function foo() {} 1`] = `"function foo() {}"`;
 
-exports[`valid > let foo = () => {} 1`] = `"let foo = () => {}"`;
+exports[`top-level-function > valid > let foo = () => {} 1`] = `"let foo = () => {}"`;

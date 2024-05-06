@@ -155,38 +155,40 @@ export function createRuleTester(options: RuleTesterOptions): RuleTesterResult {
   }
 
   function run(cases: RuleTesterClassicOptions) {
-    if (cases.valid) {
-      describe('valid', () => {
-        for (const c of cases.valid!) {
-          const _case = normalizeTestCase(c, 'valid')
-          let run: typeof it | typeof it.only = it
-          if (_case.only)
-            run = it.only
-          if (_case.skip)
-            run = it.skip
-          run(_case.description || _case.code, () => {
-            const result = valid(_case)
-            cases?.onResult?.(_case, result)
-          })
-        }
-      })
-    }
-    if (cases.invalid) {
-      describe('invalid', () => {
-        for (const c of cases.invalid!) {
-          const _case = normalizeTestCase(c, 'invalid')
-          let run: typeof it | typeof it.only = it
-          if (_case.only)
-            run = it.only
-          if (_case.skip)
-            run = it.skip
-          run(_case.description || _case.code, () => {
-            const result = invalid(_case)
-            cases?.onResult?.(_case, result)
-          })
-        }
-      })
-    }
+    describe(options.name || 'rule-to-test', () => {
+      if (cases.valid?.length) {
+        describe('valid', () => {
+          for (const c of cases.valid!) {
+            const _case = normalizeTestCase(c, 'valid')
+            let run: typeof it | typeof it.only = it
+            if (_case.only)
+              run = it.only
+            if (_case.skip)
+              run = it.skip
+            run(_case.description || _case.code, () => {
+              const result = valid(_case)
+              cases?.onResult?.(_case, result)
+            })
+          }
+        })
+      }
+      if (cases.invalid?.length) {
+        describe('invalid', () => {
+          for (const c of cases.invalid!) {
+            const _case = normalizeTestCase(c, 'invalid')
+            let run: typeof it | typeof it.only = it
+            if (_case.only)
+              run = it.only
+            if (_case.skip)
+              run = it.skip
+            run(_case.description || _case.code, () => {
+              const result = invalid(_case)
+              cases?.onResult?.(_case, result)
+            })
+          }
+        })
+      }
+    })
   }
 
   return {
