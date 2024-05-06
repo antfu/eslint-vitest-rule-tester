@@ -124,9 +124,11 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
     }
     result.messages = messages
 
-    if (_case.output) {
-      if (typeof _case.output === 'function')
-        _case.output(result.output!)
+    if (_case.output !== undefined) {
+      if (_case.output === null) // null means the output should be the same as the input
+        expect(result.output, 'output').toBe(_case.code)
+      else if (typeof _case.output === 'function') // custom assertion
+        _case.output(result.output!, _case.code)
       else
         expect(result.output, 'output').toBe(_case.output)
     }

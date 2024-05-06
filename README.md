@@ -61,8 +61,10 @@ run('rule-name', rule, {
     {
       input: 'let foo = 1',
       output(output) {
+        expect(output.slice(0, 3)).toBe('let')
         expect(output)
           .toMatchInlineSnapshot(`"const foo = 1;"`)
+        // Any custom assertion...
       },
     },
   ],
@@ -82,8 +84,10 @@ run('rule-name', rule, {
     {
       input: 'let foo = 1',
       errors(errors) {
+        expect(errors).toHaveLength(1)
         expect(errors.map(e => e.messageId))
           .toMatchInlineSnapshot(`["error-message-id"]`)
+        // Any custom assertion...
       },
     },
   ],
