@@ -80,17 +80,17 @@ export function createRuleTester(options: RuleTesterOptions): RuleTesterResult {
 
     if (_case.errors) {
       if (typeof _case.errors === 'number') {
-        expect.soft(messages.length).toBe(_case.errors)
+        expect.soft(messages.length, 'number of error messages').toBe(_case.errors)
       }
       else {
         const errors = Array.isArray(_case.errors) ? _case.errors : [_case.errors]
-        expect.soft(messages.length).toBe(errors.length)
+        expect(messages.length, 'number of error messages').toBe(errors.length)
 
         errors.forEach((e, i) => {
           if (typeof e === 'string')
-            expect.soft(messages[i].messageId, 'error massage ids').toBe(e)
+            expect.soft(messages[i].messageId, 'error massage id').toBe(e)
           else
-            expect.soft(messages[i]).toMatchObject(e)
+            expect.soft(messages[i], 'error massage object').toMatchObject(e)
         })
       }
     }
@@ -117,8 +117,12 @@ export function createRuleTester(options: RuleTesterOptions): RuleTesterResult {
     }
     result.messages = messages
 
-    if (_case.output)
-      expect.soft(result.output).toBe(_case.output)
+    if (_case.output) {
+      if (typeof _case.output === 'function')
+        _case.output(result.output!)
+      else
+        expect(result.output, 'output').toBe(_case.output)
+    }
 
     if (verifyAfterFix && result.fixed) {
       const messages = linter.verify(

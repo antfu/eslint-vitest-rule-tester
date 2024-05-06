@@ -17,7 +17,7 @@ export interface ValidTestCaseBase extends Linter.FlatConfig {
 
 export interface InvalidTestCaseBase extends ValidTestCaseBase {
   errors?: number | (string | Partial<Linter.LintMessage>)[]
-  output?: string
+  output?: string | ((output: string) => void)
 }
 
 export interface NormalizedTestCase extends InvalidTestCaseBase {
