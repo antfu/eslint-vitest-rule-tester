@@ -30,19 +30,26 @@ export type ValidTestCase = ValidTestCaseBase | string
 
 export type TestCase = ValidTestCase | InvalidTestCase
 
-export interface RuleTesterResult {
+export interface TestExecutionResult extends Linter.FixReport {
+  /**
+   * If the rule fixes in multiple steps, each step will be present here
+   */
+  steps: Linter.FixReport[]
+}
+
+export interface RuleTester {
   /**
    * Run a single test case
    */
-  each: (arg: TestCase) => Linter.FixReport
+  each: (arg: TestCase) => TestExecutionResult
   /**
    * Run a single valid test case
    */
-  valid: (arg: ValidTestCase) => Linter.FixReport
+  valid: (arg: ValidTestCase) => TestExecutionResult
   /**
    * Run a single invalid test case
    */
-  invalid: (arg: InvalidTestCase) => Linter.FixReport
+  invalid: (arg: InvalidTestCase) => TestExecutionResult
   /**
    * ESLint's RuleTester style test runner, that runs multiple test cases
    */

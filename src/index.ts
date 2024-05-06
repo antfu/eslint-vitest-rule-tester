@@ -1,13 +1,13 @@
 import type { Rule } from 'eslint'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
-import type { InvalidTestCase, RuleTesterClassicOptions, RuleTesterOptions, RuleTesterResult, TestCase, ValidTestCase } from './types'
+import type { InvalidTestCase, RuleTester, RuleTesterClassicOptions, RuleTesterOptions, TestCase, TestExecutionResult, ValidTestCase } from './types'
 import { normalizeTestCase } from './utils'
 
 export * from './utils'
 export type * from './types'
 
-export function createRuleTester(options: RuleTesterOptions): RuleTesterResult {
+export function createRuleTester(options: RuleTesterOptions): RuleTester {
   const {
     recursive = 5,
     verifyAfterFix = true,
@@ -105,15 +105,19 @@ export function createRuleTester(options: RuleTesterOptions): RuleTesterResult {
       return result
     }
 
-    let result = fix(_case.code!)
+    const step1 = fix(_case.code!)
+    const result = {
+      ...step1,
+      steps: [step1],
+    }
     if (result.fixed && recursive !== false) {
       let r = recursive
       for (r = recursive; r >= 0; r--) {
-        result = fix(result.output!)
-        if (!result.fixed) {
-          result.fixed = true
+        const step = fix(result.output!)
+        result.steps.push(step)
+        result.output = step.output
+        if (!step.fixed)
           break
-        }
       }
       if (r < 0)
         throw new Error(`Fix recursion limit exceeded, possibly the fix is not stable. Last output:\n-------\n${result.output}\n-------`)
