@@ -97,5 +97,5 @@ export interface RuleTesterClassicOptions {
   /**
    * Callback to be called after each test case
    */
-  onResult?: (_case: NormalizedTestCase, result: Linter.FixReport) => void
+  onResult?: (_case: NormalizedTestCase, result: Linter.FixReport) => void | Promise<void>
 }

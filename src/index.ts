@@ -174,9 +174,9 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
               run = it.only
             if (_case.skip)
               run = it.skip
-            run(_case.description || _case.code, () => {
+            run(_case.description || _case.code, async () => {
               const result = valid(_case)
-              cases?.onResult?.(_case, result)
+              await cases?.onResult?.(_case, result)
             })
           }
         })
@@ -190,9 +190,9 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
               run = it.only
             if (_case.skip)
               run = it.skip
-            run(_case.description || _case.code, () => {
+            run(_case.description || _case.code, async () => {
               const result = invalid(_case)
-              cases?.onResult?.(_case, result)
+              await cases?.onResult?.(_case, result)
             })
           }
         })
