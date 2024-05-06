@@ -79,7 +79,10 @@ export function createRuleTester(options: RuleTesterOptions): RuleTesterResult {
     messages.forEach(rewriteMessage)
 
     if (_case.errors) {
-      if (typeof _case.errors === 'number') {
+      if (typeof _case.errors === 'function') {
+        _case.errors(messages)
+      }
+      else if (typeof _case.errors === 'number') {
         expect.soft(messages.length, 'number of error messages').toBe(_case.errors)
       }
       else {
