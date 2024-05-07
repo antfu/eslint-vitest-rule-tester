@@ -1,7 +1,15 @@
 import type { Rule } from 'eslint'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
-import type { InvalidTestCase, RuleTester, RuleTesterClassicOptions, RuleTesterOptions, TestCase, ValidTestCase } from './types'
+import type {
+  CompatConfigOptions,
+  InvalidTestCase,
+  RuleTester,
+  RuleTesterClassicOptions,
+  RuleTesterOptions,
+  TestCase,
+  ValidTestCase,
+} from './types'
 import { normalizeTestCase } from './utils'
 
 export * from './utils'
@@ -13,45 +21,26 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
     verifyAfterFix = true,
   } = options
 
-  const linter = new Linter({
-    configType: 'flat',
-  })
+  const linter = new Linter({ configType: 'flat' })
 
   function rewriteMessage(messages: Linter.LintMessage) {
     if (messages.ruleId)
       messages.ruleId = messages.ruleId.replace(/^rule-to-test\//, '')
   }
 
-  function each(c: TestCase) {
-    const _case = normalizeTestCase(c)
+  const defaultConfigs = toArray(options.configs)
+  {
+    const inlineConfig = pickFlatConfigFromOptions(options)
+    if (inlineConfig)
+      defaultConfigs.unshift(inlineConfig)
+  }
 
-    let configs: Linter.FlatConfig[]
-    if (Array.isArray(options.configs))
-      configs = [...options.configs]
-    else if (options.configs)
-      configs = [options.configs]
-    else
-      configs = []
+  function each(c: TestCase) {
+    const testcase = normalizeTestCase(c)
+    const configs = [...defaultConfigs]
 
     if (options.rule) {
       const ruleName = options.name || 'rule-to-test'
-
-      const ruleOptions = objectPick(c as any, ['parserOptions', 'settings', 'languageOptions', 'parser'])
-      if (ruleOptions.parserOptions) {
-        ruleOptions.languageOptions ||= {}
-        ruleOptions.languageOptions.parserOptions = ruleOptions.parserOptions
-        delete ruleOptions.parserOptions
-      }
-      if (ruleOptions.settings) {
-        ruleOptions.languageOptions ||= {}
-        ruleOptions.languageOptions.settings = ruleOptions.settings
-        delete ruleOptions.settings
-      }
-      if (ruleOptions.parser) {
-        ruleOptions.languageOptions ||= {}
-        ruleOptions.languageOptions.parser = ruleOptions.parser
-        delete ruleOptions.parser
-      }
 
       configs.unshift(
         {
@@ -59,34 +48,34 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
           plugins: {
             'rule-to-test': {
               rules: {
-                [ruleName]: options.rule,
+                [ruleName]: options.rule as any,
               },
             },
           },
           rules: {
-            [`rule-to-test/${ruleName}`]: Array.isArray(_case.options)
-              ? ['error', ..._case.options]
-              : _case.options !== undefined
-                ? ['error', _case.options]
+            [`rule-to-test/${ruleName}`]: Array.isArray(testcase.options)
+              ? ['error', ...testcase.options]
+              : testcase.options !== undefined
+                ? ['error', testcase.options]
                 : 'error',
           },
-          ...ruleOptions,
+          ...pickFlatConfigFromOptions(testcase),
         },
       )
     }
 
-    const messages = linter.verify(_case.code!, configs, _case.filename)
+    const messages = linter.verify(testcase.code!, configs, testcase.filename)
     messages.forEach(rewriteMessage)
 
-    if (_case.errors) {
-      if (typeof _case.errors === 'function') {
-        _case.errors(messages)
+    if (testcase.errors) {
+      if (typeof testcase.errors === 'function') {
+        testcase.errors(messages)
       }
-      else if (typeof _case.errors === 'number') {
-        expect.soft(messages.length, 'number of error messages').toBe(_case.errors)
+      else if (typeof testcase.errors === 'number') {
+        expect.soft(messages.length, 'number of error messages').toBe(testcase.errors)
       }
       else {
-        const errors = Array.isArray(_case.errors) ? _case.errors : [_case.errors]
+        const errors = Array.isArray(testcase.errors) ? testcase.errors : [testcase.errors]
         expect(messages.length, 'number of error messages').toBe(errors.length)
 
         errors.forEach((e, i) => {
@@ -99,13 +88,13 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
     }
 
     function fix(input: string) {
-      const result = linter.verifyAndFix(input, configs, _case.filename)
+      const result = linter.verifyAndFix(input, configs, testcase.filename)
       if (result.fixed && result.output === input)
         throw new Error(`Fix does not change the code, it's likely to cause infinite fixes`)
       return result
     }
 
-    const step1 = fix(_case.code!)
+    const step1 = fix(testcase.code!)
     const result = {
       ...step1,
       steps: [step1],
@@ -124,28 +113,28 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
     }
     result.messages = messages
 
-    if (_case.output !== undefined) {
-      if (_case.output === null) // null means the output should be the same as the input
-        expect(result.output, 'output').toBe(_case.code)
-      else if (typeof _case.output === 'function') // custom assertion
-        _case.output(result.output!, _case.code)
+    if (testcase.output !== undefined) {
+      if (testcase.output === null) // null means the output should be the same as the input
+        expect(result.output, 'output').toBe(testcase.code)
+      else if (typeof testcase.output === 'function') // custom assertion
+        testcase.output(result.output!, testcase.code)
       else
-        expect(result.output, 'output').toBe(_case.output)
+        expect(result.output, 'output').toBe(testcase.output)
     }
 
-    if (_case.type === 'invalid' && _case.output === undefined && _case.errors === undefined)
+    if (testcase.type === 'invalid' && testcase.output === undefined && testcase.errors === undefined)
       throw new Error(`Invalid test case must have either 'errors' or 'output' property`)
 
     if (verifyAfterFix && result.fixed) {
       const messages = linter.verify(
         result.output!,
         configs,
-        _case.filename,
+        testcase.filename,
       )
       expect.soft(messages, 'no errors after fix').toEqual([])
     }
 
-    _case.onResult?.(result)
+    testcase.onResult?.(result)
 
     return result
   }
@@ -229,4 +218,39 @@ export function run(
     ...options,
   })
   return tester.run(cases)
+}
+
+export function pickFlatConfigFromOptions(options: CompatConfigOptions): Linter.FlatConfig | undefined {
+  const picked = objectPick(
+    options,
+    [
+      'parserOptions',
+      'parser',
+      'languageOptions',
+      'linterOptions',
+      'settings',
+      'processor',
+      'files',
+    ] satisfies (keyof CompatConfigOptions)[],
+  )
+
+  if (picked.parserOptions) {
+    picked.languageOptions ||= {}
+    picked.languageOptions.parserOptions = picked.parserOptions
+    delete picked.parserOptions
+  }
+  if (picked.parser) {
+    picked.languageOptions ||= {}
+    picked.languageOptions.parser = picked.parser
+    delete picked.parser
+  }
+  if (Object.keys(picked).length)
+    return picked
+  return undefined
+}
+
+function toArray<T>(value: T | T[] | undefined): T[] {
+  if (value === undefined)
+    return []
+  return Array.isArray(value) ? value : [value]
 }

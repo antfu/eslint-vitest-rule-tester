@@ -1,6 +1,7 @@
 import type { Linter, Rule } from 'eslint'
+import type { RuleModule } from '@typescript-eslint/utils/eslint-utils'
 
-export interface ValidTestCaseBase extends Linter.FlatConfig {
+export interface ValidTestCaseBase extends CompatConfigOptions {
   name?: string
   description?: string
   code: string
@@ -8,10 +9,6 @@ export interface ValidTestCaseBase extends Linter.FlatConfig {
   filename?: string
   only?: boolean
   skip?: boolean
-
-  parserOptions?: Linter.ParserOptions
-  parser?: Linter.ParserModule
-
   onResult?: (result: Linter.FixReport) => void
 }
 
@@ -47,6 +44,16 @@ export interface TestExecutionResult extends Linter.FixReport {
   steps: Linter.FixReport[]
 }
 
+export interface CompatConfigOptions {
+  parserOptions?: Linter.ParserOptions
+  parser?: Linter.ParserModule
+  languageOptions?: Linter.FlatConfig['languageOptions']
+  linterOptions?: Linter.FlatConfig['linterOptions']
+  settings?: Linter.FlatConfig['settings']
+  processor?: Linter.FlatConfig['processor']
+  files?: Linter.FlatConfig['files']
+}
+
 export interface RuleTester {
   /**
    * Run a single test case
@@ -66,11 +73,11 @@ export interface RuleTester {
   run: (options: RuleTesterClassicOptions) => void
 }
 
-export interface RuleTesterOptions {
+export interface RuleTesterOptions extends CompatConfigOptions {
   /**
    * The rule to test
    */
-  rule?: Rule.RuleModule
+  rule?: Rule.RuleModule | RuleModule<any, any, any>
   /**
    * The name of the rule to test
    */

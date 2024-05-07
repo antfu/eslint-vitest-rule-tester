@@ -55,10 +55,8 @@ const invalids = [
 const ruleTester = createRuleTester({
   name: RULE_NAME,
   rule: rule as any,
-  configs: {
-    languageOptions: {
-      parser: tsParser,
-    },
+  languageOptions: {
+    parser: tsParser,
   },
 })
 
