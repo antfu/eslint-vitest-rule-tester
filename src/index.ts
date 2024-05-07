@@ -22,6 +22,7 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
   const {
     recursive = 10,
     verifyAfterFix = true,
+    verifyFixChanges = true,
     rule,
   } = options
 
@@ -73,6 +74,7 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
       configs.push(
         {
           name: 'rule-to-test',
+          files: ['**'],
           plugins: {
             'rule-to-test': {
               rules: {
@@ -117,7 +119,7 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
     function fix(input: string) {
       const problems = linter.verify(input, configs, testcase.filename)
       const result = applyFixes(input, problems)
-      if (result.fixed && result.output === input)
+      if (result.fixed && result.output === input && verifyFixChanges)
         throw new Error(`Fix does not change the code, it's likely to cause infinite fixes`)
       return result
     }
@@ -277,7 +279,9 @@ export function pickFlatConfigFromOptions(options: CompatConfigOptions): Linter.
     picked.languageOptions ||= {}
     picked.languageOptions.parserOptions = picked.parserOptions
     if (picked.parserOptions.ecmaVersion)
-      picked.languageOptions.ecmaVersion = picked.parserOptions.ecmaVersion
+      picked.languageOptions.ecmaVersion ||= picked.parserOptions.ecmaVersion
+    if (picked.parserOptions.sourceType)
+      picked.languageOptions.sourceType ||= picked.parserOptions.sourceType
     delete picked.parserOptions
   }
   if (picked.parser) {

@@ -108,6 +108,11 @@ export interface RuleTesterOptions extends CompatConfigOptions {
    * @default true
    */
   verifyAfterFix?: boolean
+  /**
+   * Verify that fix allways changes the code
+   * @default true
+   */
+  verifyFixChanges?: boolean
 }
 
 export interface RuleTesterClassicOptions {
