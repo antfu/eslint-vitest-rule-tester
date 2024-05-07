@@ -20,28 +20,42 @@ npm i -D eslint-vitest-rule-tester
 
 ### Classical Usage
 
-Simliar style to ESLint's `TestRunner` (test cases with implicit test suites)
+Simliar style to ESLint's `RuleTester` (test cases with implicit test suites)
 
 ```ts
-import { run } from 'eslint-vitest-rule-tester'
+import { run, runClassic } from 'eslint-vitest-rule-tester'
+import { expect } from 'vitest'
 
-run('rule-name', rule, {
+// Classic RuleTester.run style
+runClassic('rule-name', rule, {
+  valid: [
+    // ...
+  ],
+  invalid: [
+    // ...
+  ],
+}, {
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+})
+
+// Or everyting-in-one-object style
+run({
+  name: 'rule-name',
+  rule,
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+  },
+
   valid: [
     // test cases
   ],
   invalid: [
     // test cases
   ],
-}, {
-  // the default flat configs
-  configs: {
-    languageOptions: {
-      parserOptions: {
-        ecmaVersion: 2020,
-        sourceType: 'module',
-      },
-    },
-  }
 })
 ```
 
@@ -50,13 +64,15 @@ run('rule-name', rule, {
 
 #### `output`
 
-`output` field can be a function to do custom assertion. This would also be compatible with snapshot testing.
+`output` field can be a function to do custom assertions. This would also be compatible with snapshot testing.
 
 ```ts
-import { run } from 'eslint-vitest-rule-tester'
+import { run, } from 'eslint-vitest-rule-tester'
 import { expect } from 'vitest'
 
-run('rule-name', rule, {
+run({
+  name: 'rule-name',
+  rule,
   invalid: [
     {
       input: 'let foo = 1',
@@ -79,7 +95,9 @@ run('rule-name', rule, {
 import { run } from 'eslint-vitest-rule-tester'
 import { expect } from 'vitest'
 
-run('rule-name', rule, {
+run({
+  name: 'rule-name',
+  rule,
   invalid: [
     {
       input: 'let foo = 1',
@@ -96,13 +114,15 @@ run('rule-name', rule, {
 
 #### `onResult` hook
 
-`onResult` field can be an function to do custom assertion with the entire result object.
+`onResult` field can be a function to do custom assertions with the entire result object.
 
 ```ts
-import { run } from 'eslint-vitest-rule-tester'
+import { runClassic } from 'eslint-vitest-rule-tester'
 import { expect } from 'vitest'
 
-run('rule-name', rule, {
+run({
+  name: 'rule-name',
+  rule,
   invalid: [
     'let foo = 1',
   ],

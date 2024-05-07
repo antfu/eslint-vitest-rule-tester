@@ -1,5 +1,4 @@
-import type { Linter, Rule } from 'eslint'
-import type { RuleModule as TypeScriptRuleModule } from '@typescript-eslint/utils/eslint-utils'
+import type { Linter } from 'eslint'
 
 export interface ValidTestCaseBase extends CompatConfigOptions {
   name?: string
@@ -65,7 +64,7 @@ export interface CompatConfigOptions {
   files?: Linter.FlatConfig['files']
 }
 
-export type RuleModule = Rule.RuleModule | TypeScriptRuleModule<any, any, any>
+export type RuleModule = any // to allow any rule module
 
 export interface RuleTester {
   /**

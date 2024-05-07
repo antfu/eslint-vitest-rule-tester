@@ -1,6 +1,6 @@
 import * as tsParser from '@typescript-eslint/parser'
 import { expect } from 'vitest'
-import { createRuleTester } from '../../src'
+import { run } from '../../src'
 import rule, { RULE_NAME } from './top-level-function'
 
 const valids = [
@@ -52,21 +52,20 @@ const invalids = [
   ],
 ]
 
-const ruleTester = createRuleTester({
+run({
   name: RULE_NAME,
   rule: rule as any,
   languageOptions: {
     parser: tsParser,
   },
-})
 
-ruleTester.run({
   valid: valids,
   invalid: invalids.map(i => ({
     code: i[0],
     output: i[1],
     errors: [{ messageId: 'topLevelFunctionDeclaration' }],
   })),
+
   onResult(_case, result) {
     if (_case.type === 'invalid')
       expect(result.output).toMatchSnapshot()

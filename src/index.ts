@@ -1,4 +1,3 @@
-import type { Rule } from 'eslint'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
 import type {
@@ -233,7 +232,18 @@ function objectPick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pic
   return result
 }
 
-export function run(
+/**
+ * Shortcut to run test cases for a rule
+ */
+export function run(options: RuleTesterClassicOptions & RuleTesterOptions) {
+  const tester = createRuleTester(options)
+  return tester.run(options)
+}
+
+/**
+ * Shortcut to run test cases for a rule in classic style
+ */
+export function runClassic(
   ruleName: string,
   rule: RuleModule,
   cases: RuleTesterClassicOptions,
