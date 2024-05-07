@@ -1,7 +1,7 @@
 import type { Rule } from 'eslint'
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
-import type { InvalidTestCase, RuleTester, RuleTesterClassicOptions, RuleTesterOptions, TestCase, TestExecutionResult, ValidTestCase } from './types'
+import type { InvalidTestCase, RuleTester, RuleTesterClassicOptions, RuleTesterOptions, TestCase, ValidTestCase } from './types'
 import { normalizeTestCase } from './utils'
 
 export * from './utils'
