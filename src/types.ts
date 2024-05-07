@@ -12,6 +12,17 @@ export interface ValidTestCaseBase extends CompatConfigOptions {
   onResult?: (result: Linter.FixReport) => void
 }
 
+export interface TestCaseError extends Partial<Linter.LintMessage> {
+  /**
+   * Data for interpolate the error message
+   */
+  data?: Record<string, any>
+  /**
+   * Alias to `nodeType`
+   */
+  type?: string
+}
+
 export interface InvalidTestCaseBase extends ValidTestCaseBase {
   /**
    * Expected errors.

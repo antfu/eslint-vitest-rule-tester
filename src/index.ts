@@ -8,9 +8,11 @@ import type {
   RuleTesterClassicOptions,
   RuleTesterOptions,
   TestCase,
+  TestCaseError,
   ValidTestCase,
 } from './types'
 import { normalizeTestCase } from './utils'
+import { interpolate } from './vendor/interpolate'
 
 export * from './utils'
 export type * from './types'
@@ -19,6 +21,7 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
   const {
     recursive = 5,
     verifyAfterFix = true,
+    rule,
   } = options
 
   const linter = new Linter({ configType: 'flat' })
@@ -35,6 +38,30 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
       defaultConfigs.unshift(inlineConfig)
   }
 
+  function normalizeCaseError(error: TestCaseError | string): Partial<Linter.LintMessage> {
+    if (typeof error === 'string')
+      return { messageId: error }
+    const clone = { ...error }
+    if ('data' in clone) {
+      if (!rule)
+        throw new Error(`'data' property in invalid test case requires 'rule' to be provided at the top level`)
+      if (!clone.messageId)
+        throw new Error(`'data' property is provided but 'messageId' is missing`)
+      if (clone.message)
+        throw new Error(`'data' and 'message' properties are mutually exclusive`)
+      const template = rule.meta?.messages?.[clone.messageId]
+      if (!template)
+        throw new Error(`Message ID '${clone.messageId}' is not found in the rule meta`)
+      clone.message = interpolate(template, clone.data)
+      delete clone.data
+    }
+    if ('type' in clone) {
+      clone.nodeType = clone.type
+      delete clone.type
+    }
+    return clone as Partial<Linter.LintMessage>
+  }
+
   function each(c: TestCase) {
     const testcase = normalizeTestCase(c)
     const configs = [...defaultConfigs]
@@ -42,7 +69,7 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
     if (options.rule) {
       const ruleName = options.name || 'rule-to-test'
 
-      configs.unshift(
+      configs.push(
         {
           name: 'rule-to-test',
           plugins: {
@@ -75,14 +102,13 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
         expect.soft(messages.length, 'number of error messages').toBe(testcase.errors)
       }
       else {
-        const errors = Array.isArray(testcase.errors) ? testcase.errors : [testcase.errors]
+        const errors = toArray(testcase.errors)
+          .map(e => normalizeCaseError(e))
+
         expect(messages.length, 'number of error messages').toBe(errors.length)
 
         errors.forEach((e, i) => {
-          if (typeof e === 'string')
-            expect.soft(messages[i].messageId, 'error massage id').toBe(e)
-          else
-            expect.soft(messages[i], 'error massage object').toMatchObject(e)
+          expect.soft(messages[i], 'error massage object').toMatchObject(e)
         })
       }
     }
@@ -237,6 +263,8 @@ export function pickFlatConfigFromOptions(options: CompatConfigOptions): Linter.
   if (picked.parserOptions) {
     picked.languageOptions ||= {}
     picked.languageOptions.parserOptions = picked.parserOptions
+    if (picked.parserOptions.ecmaVersion)
+      picked.languageOptions.ecmaVersion = picked.parserOptions.ecmaVersion
     delete picked.parserOptions
   }
   if (picked.parser) {
