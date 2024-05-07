@@ -1,6 +1,6 @@
 import type { Linter } from 'eslint'
 
-export interface ValidTestCaseBase extends CompatConfigOptions {
+export interface ValidTestCaseBase extends CompatConfigOptions, RuleTesterBehaviorOptions {
   name?: string
   description?: string
   code: string
@@ -82,22 +82,10 @@ export interface RuleTester {
   /**
    * ESLint's RuleTester style test runner, that runs multiple test cases
    */
-  run: (options: RuleTesterClassicOptions) => void
+  run: (options: TestCasesOptions) => void
 }
 
-export interface RuleTesterOptions extends CompatConfigOptions {
-  /**
-   * The rule to test
-   */
-  rule?: RuleModule
-  /**
-   * The name of the rule to test
-   */
-  name?: string
-  /**
-   * Additional flat configs to be merged with the rule config
-   */
-  configs?: Linter.FlatConfig | Linter.FlatConfig[]
+export interface RuleTesterBehaviorOptions {
   /**
    * The number of times to recursively apply the rule
    * @default 10
@@ -115,7 +103,22 @@ export interface RuleTesterOptions extends CompatConfigOptions {
   verifyFixChanges?: boolean
 }
 
-export interface RuleTesterClassicOptions {
+export interface RuleTesterInitOptions extends CompatConfigOptions, RuleTesterBehaviorOptions {
+  /**
+   * The rule to test
+   */
+  rule?: RuleModule
+  /**
+   * The name of the rule to test
+   */
+  name?: string
+  /**
+   * Additional flat configs to be merged with the rule config
+   */
+  configs?: Linter.FlatConfig | Linter.FlatConfig[]
+}
+
+export interface TestCasesOptions {
   valid?: (ValidTestCase | string)[]
   invalid?: (InvalidTestCase | string)[]
   /**
