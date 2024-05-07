@@ -100,7 +100,7 @@ export interface RuleTesterOptions extends CompatConfigOptions {
   configs?: Linter.FlatConfig | Linter.FlatConfig[]
   /**
    * The number of times to recursively apply the rule
-   * @default 5
+   * @default 10
    */
   recursive?: number | false
   /**

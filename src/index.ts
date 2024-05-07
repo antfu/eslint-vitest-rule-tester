@@ -13,13 +13,14 @@ import type {
 } from './types'
 import { normalizeTestCase } from './utils'
 import { interpolate } from './vendor/interpolate'
+import { applyFixes } from './vendor/fixer'
 
 export * from './utils'
 export type * from './types'
 
 export function createRuleTester(options: RuleTesterOptions): RuleTester {
   const {
-    recursive = 5,
+    recursive = 10,
     verifyAfterFix = true,
     rule,
   } = options
@@ -114,7 +115,8 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
     }
 
     function fix(input: string) {
-      const result = linter.verifyAndFix(input, configs, testcase.filename)
+      const problems = linter.verify(input, configs, testcase.filename)
+      const result = applyFixes(input, problems)
       if (result.fixed && result.output === input)
         throw new Error(`Fix does not change the code, it's likely to cause infinite fixes`)
       return result

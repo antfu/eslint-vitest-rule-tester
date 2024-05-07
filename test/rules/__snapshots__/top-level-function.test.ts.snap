@@ -31,27 +31,3 @@ exports[`top-level-function > invalid > export const foo = async () =>
   return {}
 }"
 `;
-
-exports[`top-level-function > valid > ;(() => {})() 1`] = `";(() => {})()"`;
-
-exports[`top-level-function > valid > const Foo: Bar = () => {} 1`] = `"const Foo: Bar = () => {}"`;
-
-exports[`top-level-function > valid > const foo = (() => {}) as any 1`] = `"const foo = (() => {}) as any"`;
-
-exports[`top-level-function > valid > const foo = () => ({}) 1`] = `"const foo = () => ({})"`;
-
-exports[`top-level-function > valid > const foo = () => String(123) 1`] = `"const foo = () => String(123)"`;
-
-exports[`top-level-function > valid > const foo = (x, y) => x + y 1`] = `"const foo = (x, y) => x + y"`;
-
-exports[`top-level-function > valid > const foo = async (x, y) => x + y 1`] = `"const foo = async (x, y) => x + y"`;
-
-exports[`top-level-function > valid > export default () => {} 1`] = `"export default () => {}"`;
-
-exports[`top-level-function > valid > export default defineConfig(() => {}) 1`] = `"export default defineConfig(() => {})"`;
-
-exports[`top-level-function > valid > function foo() { const bar = () => {} } 1`] = `"function foo() { const bar = () => {} }"`;
-
-exports[`top-level-function > valid > function foo() {} 1`] = `"function foo() {}"`;
-
-exports[`top-level-function > valid > let foo = () => {} 1`] = `"let foo = () => {}"`;
