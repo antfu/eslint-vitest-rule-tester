@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import type {
   CompatConfigOptions,
   InvalidTestCase,
+  RuleModule,
   RuleTester,
   RuleTesterClassicOptions,
   RuleTesterOptions,
@@ -234,7 +235,7 @@ function objectPick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pic
 
 export function run(
   ruleName: string,
-  rule: Rule.RuleModule,
+  rule: RuleModule,
   cases: RuleTesterClassicOptions,
   options?: RuleTesterOptions,
 ) {

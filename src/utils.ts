@@ -19,7 +19,7 @@ export function unindent(str: TemplateStringsArray) {
     const indent = line.match(/^\s*/)?.[0].length
     return indent === undefined ? min : Math.min(min, indent)
   }, Number.POSITIVE_INFINITY)
-  return lines.map(line => line.slice(commonIndent)).join('\n')
+  return lines.map(line => line.slice(commonIndent)).join('\n').trim()
 }
 
 export function normalizeTestCase(c: TestCase, type?: 'valid' | 'invalid'): NormalizedTestCase {
