@@ -75,7 +75,7 @@ run({
   rule,
   invalid: [
     {
-      input: 'let foo = 1',
+      code: 'let foo = 1',
       output(output) {
         expect(output.slice(0, 3)).toBe('let')
         expect(output)
@@ -100,7 +100,7 @@ run({
   rule,
   invalid: [
     {
-      input: 'let foo = 1',
+      code: 'let foo = 1',
       errors(errors) {
         expect(errors).toHaveLength(1)
         expect(errors.map(e => e.messageId))
@@ -163,7 +163,7 @@ describe('rule-name', () => {
 
   it('invalid case 1 with snapshot', () => {
     const result = invalid({
-      input: 'const foo = 1',
+      code: 'const foo = 1',
       errors: ['error-message-id'],
     })
 
