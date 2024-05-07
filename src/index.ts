@@ -167,14 +167,14 @@ export function createRuleTester(options: RuleTesterOptions): RuleTester {
 
   function valid(arg: ValidTestCase | string) {
     const result = each(arg)
-    expect.soft(result.fixed).toBeFalsy()
-    expect.soft(result.messages).toEqual([])
+    expect.soft(result.messages, 'no errors on valid cases').toEqual([])
+    expect.soft(result.fixed, 'no need to fix for valid cases').toBeFalsy()
     return result
   }
 
   function invalid(arg: InvalidTestCase | string) {
     const result = each(arg)
-    expect.soft(result.messages).not.toEqual([])
+    expect.soft(result.messages, 'expect errors').not.toEqual([])
     return result
   }
 

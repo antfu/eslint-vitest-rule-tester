@@ -30,7 +30,7 @@ export interface InvalidTestCaseBase extends ValidTestCaseBase {
    * If an array of strings is provided, it asserts that the error messageIds are equal to the array provided.
    * If an array of objects is provided, it asserts that the errors are partially equal to the objects provided.
    */
-  errors?: number | (string | Partial<Linter.LintMessage>)[] | ((errors: Linter.LintMessage[]) => void)
+  errors?: number | (string | TestCaseError)[] | ((errors: Linter.LintMessage[]) => void)
   /**
    * Assert if output is expected.
    * Pass `null` to assert that the output is the same as the input.
