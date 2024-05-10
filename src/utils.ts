@@ -14,12 +14,6 @@ export function normalizeTestCase(c: TestCase, type?: 'valid' | 'invalid'): Norm
   return normalized
 }
 
-export function toArray<T>(value: T | T[] | undefined): T[] {
-  if (value === undefined)
-    return []
-  return Array.isArray(value) ? value : [value]
-}
-
 export function normalizeCaseError(error: TestCaseError | string, rule?: RuleModule): Partial<Linter.LintMessage> {
   if (typeof error === 'string')
     return { messageId: error }
@@ -42,13 +36,4 @@ export function normalizeCaseError(error: TestCaseError | string, rule?: RuleMod
     delete clone.type
   }
   return clone as Partial<Linter.LintMessage>
-}
-
-export function objectPick<T extends object, K extends keyof T>(obj: T, keys: K[]): Pick<T, K> {
-  const result: any = {}
-  for (const key of keys) {
-    if (Object.prototype.hasOwnProperty.call(obj, key))
-      result[key] = obj[key]
-  }
-  return result
 }

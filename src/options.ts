@@ -1,6 +1,6 @@
 import type { Linter } from 'eslint'
+import { objectPick } from '@antfu/utils'
 import type { CompatConfigOptions } from './types'
-import { objectPick } from './utils'
 
 export function pickFlatConfigFromOptions(options: CompatConfigOptions): Linter.FlatConfig | undefined {
   const picked = objectPick(

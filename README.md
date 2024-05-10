@@ -8,7 +8,15 @@
 
 ESLint rule tester with Vitest.
 
-This module requires ESLint v9.0+.
+Provides a better testing experience, supports snapshoting, and does not require `globals: true` in Vitest.
+
+> This module requires ESLint v9.0+.
+
+## Who is using?
+
+- [ESLint Stylistic](https://github.com/eslint-stylistic/eslint-stylistic/blob/main/packages/eslint-plugin-js/rules/array-bracket-newline/array-bracket-newline.test.ts)
+- [eslint-plugin-command](https://github.com/antfu/eslint-plugin-command/blob/main/src/commands/inline-arrow.test.ts)
+- [eslint-plugin-antfu](https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-list-newline.test.ts)
 
 ## Install
 

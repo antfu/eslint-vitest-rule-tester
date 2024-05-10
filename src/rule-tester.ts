@@ -1,5 +1,6 @@
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
+import { toArray } from '@antfu/utils'
 import type {
   InvalidTestCase,
   RuleTester,
@@ -8,7 +9,7 @@ import type {
   TestCasesOptions,
   ValidTestCase,
 } from './types'
-import { normalizeCaseError, normalizeTestCase, toArray } from './utils'
+import { normalizeCaseError, normalizeTestCase } from './utils'
 import { applyFixes } from './vendor/fixer'
 import { pickFlatConfigFromOptions } from './options'
 
