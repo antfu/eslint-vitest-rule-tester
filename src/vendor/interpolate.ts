@@ -9,7 +9,7 @@ export function interpolate(
 
   // Substitution content for any {{ }} markers.
   return text.replace(
-    /\{\{([^{}]+?)\}\}/gu,
+    /\{\{([^{}]+)\}\}/gu,
     (fullMatch, termWithWhitespace: string) => {
       const term = termWithWhitespace.trim()
 
