@@ -48,7 +48,7 @@
   },
   "peerDependencies": {
     "eslint": "^9.0.0",
-    "vitest": "^1.0.0"
+    "vitest": "^1.0.0 || ^2.0.0"
   },
   "dependencies": {
     "@antfu/utils": "^0.7.8",
