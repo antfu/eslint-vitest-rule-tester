@@ -103,6 +103,13 @@ export interface RuleTesterBehaviorOptions {
   verifyFixChanges?: boolean
 }
 
+export interface DefaultFilenames {
+  js: string
+  jsx: string
+  ts: string
+  tsx: string
+}
+
 export interface RuleTesterInitOptions extends CompatConfigOptions, RuleTesterBehaviorOptions {
   /**
    * The rule to test
@@ -116,6 +123,11 @@ export interface RuleTesterInitOptions extends CompatConfigOptions, RuleTesterBe
    * Additional flat configs to be merged with the rule config
    */
   configs?: Linter.FlatConfig | Linter.FlatConfig[]
+  /**
+   * The default filenames to use for type-aware tests.
+   * @default { js: 'file.js', jsx: 'react.jsx', ts: 'file.ts', tsx: 'react.tsx' }
+   */
+  defaultFilenames?: Partial<DefaultFilenames>
 }
 
 export interface TestCasesOptions {

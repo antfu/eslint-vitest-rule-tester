@@ -1,6 +1,6 @@
 import { Linter } from 'eslint'
 import { describe, expect, it } from 'vitest'
-import { toArray } from '@antfu/utils'
+import { deepMerge, toArray } from '@antfu/utils'
 import type {
   InvalidTestCase,
   RuleTester,
@@ -9,12 +9,27 @@ import type {
   TestCasesOptions,
   ValidTestCase,
 } from './types'
-import { normalizeCaseError, normalizeTestCase } from './utils'
+import { isUsingTypeScriptParser, normalizeCaseError, normalizeTestCase } from './utils'
 import { applyFixes } from './vendor/fixer'
 import { pickFlatConfigFromOptions } from './options'
 
 export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
-  const linter = new Linter({ configType: 'flat' })
+  const languageOptions = deepMerge(
+    options.languageOptions ?? {
+      parser: options.parser,
+      parserOptions: options.parserOptions,
+    },
+    ...toArray(options.configs)
+      .map(c => c.languageOptions)
+      .filter(<T>(c: T | undefined): c is T => c !== undefined),
+  ) as Linter.FlatConfig['languageOptions']
+
+  const linter = new Linter({
+    configType: 'flat',
+    cwd: isUsingTypeScriptParser(options)
+      ? languageOptions?.parserOptions?.tsconfigRootDir
+      : undefined,
+  })
 
   const defaultConfigs = toArray(options.configs)
   {
@@ -23,8 +38,16 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
       defaultConfigs.unshift(inlineConfig)
   }
 
+  const defaultFilenames = {
+    js: 'file.js',
+    ts: 'file.ts',
+    jsx: 'react.jsx',
+    tsx: 'react.tsx',
+    ...options.defaultFilenames,
+  }
+
   function each(c: TestCase) {
-    const testcase = normalizeTestCase(c)
+    const testcase = normalizeTestCase(c, languageOptions, defaultFilenames)
 
     const {
       recursive = 10,
@@ -163,7 +186,7 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
       if (cases.valid?.length) {
         describe('valid', () => {
           for (const c of cases.valid!) {
-            const _case = normalizeTestCase(c, 'valid')
+            const _case = normalizeTestCase(c, languageOptions, defaultFilenames, 'valid')
             let run: typeof it | typeof it.only = it
             if (_case.only)
               run = it.only
@@ -179,7 +202,7 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
       if (cases.invalid?.length) {
         describe('invalid', () => {
           for (const c of cases.invalid!) {
-            const _case = normalizeTestCase(c, 'invalid')
+            const _case = normalizeTestCase(c, languageOptions, defaultFilenames, 'invalid')
             let run: typeof it | typeof it.only = it
             if (_case.only)
               run = it.only
