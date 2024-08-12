@@ -1,7 +1,7 @@
 import path from 'node:path'
 import process from 'node:process'
 import type { Linter } from 'eslint'
-import { unindent } from '@antfu/utils'
+import { deepMerge, unindent } from '@antfu/utils'
 import type { DefaultFilenames, NormalizedTestCase, RuleModule, TestCase, TestCaseError } from './types'
 import { interpolate } from './vendor/interpolate'
 
@@ -19,17 +19,28 @@ export function normalizeTestCase(
   const normalized = obj as NormalizedTestCase
   normalized.type ||= type || (('errors' in obj || 'output' in obj) ? 'invalid' : 'valid')
 
-  if (isUsingTypeScriptParser(languageOptions)) {
-    normalized.filename ||= getDefaultTypeScriptFilename(languageOptions, defaultFilenames)
-    normalized.parserOptions = {
+  const merged: Linter.Config['languageOptions'] = {
+    ...languageOptions,
+    ...normalized.languageOptions,
+    parserOptions: {
+      ...languageOptions?.parserOptions,
+      ...normalized.parserOptions,
+      ...normalized.languageOptions?.parserOptions,
+    },
+  }
+
+  if (isUsingTypeScriptParser(merged)) {
+    normalized.filename ||= getDefaultTypeScriptFilename(merged, defaultFilenames)
+    normalized.languageOptions ||= {}
+    normalized.languageOptions.parserOptions = {
       ecmaVersion: 'latest',
       sourceType: 'module',
       disallowAutomaticSingleRunInference: true,
-      ...normalized.parserOptions,
+      ...merged.parserOptions,
     }
   }
   else {
-    normalized.filename ||= getDefaultJavaScriptFilename(languageOptions, defaultFilenames)
+    normalized.filename ||= getDefaultJavaScriptFilename(merged, defaultFilenames)
   }
   return normalized
 }
