@@ -1,7 +1,7 @@
 import path from 'node:path'
 import process from 'node:process'
 import type { Linter } from 'eslint'
-import { deepMerge, unindent } from '@antfu/utils'
+import { unindent } from '@antfu/utils'
 import type { DefaultFilenames, NormalizedTestCase, RuleModule, TestCase, TestCaseError } from './types'
 import { interpolate } from './vendor/interpolate'
 
