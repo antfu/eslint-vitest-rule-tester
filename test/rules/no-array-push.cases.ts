@@ -1,8 +1,5 @@
-import path from 'node:path'
-import tsParser from '@typescript-eslint/parser'
 import { expect } from 'vitest'
 import type { RuleTesterInitOptions, TestCasesOptions } from '../../src'
-import { run } from '../../src'
 import rule, { RULE_NAME } from './no-array-push'
 
 const valids = [

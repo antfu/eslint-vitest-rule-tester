@@ -1,4 +1,3 @@
-import path from 'node:path'
 import tsParser from '@typescript-eslint/parser'
 import { run } from '../../src'
 import { common } from './no-array-push.cases'
