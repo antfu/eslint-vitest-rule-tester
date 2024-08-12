@@ -9,7 +9,7 @@ export { unindent, unindent as $ }
 
 export function normalizeTestCase(
   c: TestCase,
-  languageOptions: Linter.FlatConfig['languageOptions'],
+  languageOptions: Linter.Config['languageOptions'],
   defaultFilenames: DefaultFilenames,
   type?: 'valid' | 'invalid',
 ): NormalizedTestCase {
@@ -59,7 +59,7 @@ export function normalizeCaseError(error: TestCaseError | string, rule?: RuleMod
 }
 
 function getDefaultJavaScriptFilename(
-  languageOptions: Linter.FlatConfig['languageOptions'],
+  languageOptions: Linter.Config['languageOptions'],
   defaultFilenames: DefaultFilenames,
 ) {
   return languageOptions?.parserOptions?.ecmaFeatures?.jsx
@@ -68,7 +68,7 @@ function getDefaultJavaScriptFilename(
 }
 
 function getDefaultTypeScriptFilename(
-  languageOptions: Linter.FlatConfig['languageOptions'],
+  languageOptions: Linter.Config['languageOptions'],
   defaultFilenames: DefaultFilenames,
 ) {
   const rootPath = (isUsingTypeScriptTypings(languageOptions)
@@ -89,11 +89,11 @@ function getDefaultTypeScriptFilename(
   return path.join(rootPath, filename)
 }
 
-export function isUsingTypeScriptParser(languageOptions: Linter.FlatConfig['languageOptions']) {
+export function isUsingTypeScriptParser(languageOptions: Linter.Config['languageOptions']): boolean {
   return languageOptions?.parser?.meta?.name === 'typescript-eslint/parser'
 }
 
-export function isUsingTypeScriptTypings(languageOptions: Linter.FlatConfig['languageOptions']) {
+export function isUsingTypeScriptTypings(languageOptions: Linter.Config['languageOptions']): boolean {
   return languageOptions?.parserOptions?.program
     || languageOptions?.parserOptions?.project
     || languageOptions?.parserOptions?.projectService

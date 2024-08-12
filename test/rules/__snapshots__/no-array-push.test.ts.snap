@@ -1,9 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`no-array-push > invalid > const foo = [1, 2, 3]; foo.push(4) 1`] = `"const foo = [1, 2, 3]; foo.push(4)"`;
-
-exports[`no-array-push > invalid > const foo = [1, 2, 3]; foo.push(4) 2`] = `"const foo = [1, 2, 3]; foo.push(4)"`;
-
-exports[`no-array-push > invalid > const foo = [1, 2, 3]; foo.push(4) 3`] = `"const foo = [1, 2, 3]; foo.push(4)"`;
-
-exports[`no-array-push > invalid > const foo = [1, 2, 3]; foo.push(4) 4`] = `"const foo = [1, 2, 3]; foo.push(4)"`;

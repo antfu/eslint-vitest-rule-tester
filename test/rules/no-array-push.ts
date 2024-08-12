@@ -11,7 +11,6 @@ export default createEslintRule<Options, MessageIds>({
     type: 'problem',
     docs: {
       description: 'Prevent calling push on an array',
-      recommended: 'recommended',
     },
     schema: [],
     messages: {

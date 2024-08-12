@@ -2,7 +2,7 @@ import type { Linter } from 'eslint'
 import { objectPick } from '@antfu/utils'
 import type { CompatConfigOptions } from './types'
 
-export function pickFlatConfigFromOptions(options: CompatConfigOptions): Linter.FlatConfig | undefined {
+export function pickFlatConfigFromOptions(options: CompatConfigOptions): Linter.Config | undefined {
   const picked = objectPick(
     options,
     [

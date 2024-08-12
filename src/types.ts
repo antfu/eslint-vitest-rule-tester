@@ -56,12 +56,12 @@ export interface TestExecutionResult extends Linter.FixReport {
 
 export interface CompatConfigOptions {
   parserOptions?: Linter.ParserOptions
-  parser?: Linter.ParserModule
-  languageOptions?: Linter.FlatConfig['languageOptions']
-  linterOptions?: Linter.FlatConfig['linterOptions']
-  settings?: Linter.FlatConfig['settings']
-  processor?: Linter.FlatConfig['processor']
-  files?: Linter.FlatConfig['files']
+  parser?: Linter.Parser
+  languageOptions?: Linter.Config['languageOptions']
+  linterOptions?: Linter.Config['linterOptions']
+  settings?: Linter.Config['settings']
+  processor?: Linter.Config['processor']
+  files?: Linter.Config['files']
 }
 
 export type RuleModule = any // to allow any rule module
@@ -122,7 +122,7 @@ export interface RuleTesterInitOptions extends CompatConfigOptions, RuleTesterBe
   /**
    * Additional flat configs to be merged with the rule config
    */
-  configs?: Linter.FlatConfig | Linter.FlatConfig[]
+  configs?: Linter.Config | Linter.Config[]
   /**
    * The default filenames to use for type-aware tests.
    * @default { js: 'file.js', jsx: 'file.jsx', ts: 'file.ts', tsx: 'file.tsx' }

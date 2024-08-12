@@ -22,7 +22,7 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
     ...toArray(options.configs)
       .map(c => c.languageOptions)
       .filter(<T>(c: T | undefined): c is T => c !== undefined),
-  ) as Linter.FlatConfig['languageOptions']
+  ) as Linter.Config['languageOptions']
 
   const linter = new Linter({
     configType: 'flat',
