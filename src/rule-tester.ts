@@ -41,8 +41,8 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
   const defaultFilenames = {
     js: 'file.js',
     ts: 'file.ts',
-    jsx: 'react.jsx',
-    tsx: 'react.tsx',
+    jsx: 'file.jsx',
+    tsx: 'file.tsx',
     ...options.defaultFilenames,
   }
 

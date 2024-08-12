@@ -125,7 +125,7 @@ export interface RuleTesterInitOptions extends CompatConfigOptions, RuleTesterBe
   configs?: Linter.FlatConfig | Linter.FlatConfig[]
   /**
    * The default filenames to use for type-aware tests.
-   * @default { js: 'file.js', jsx: 'react.jsx', ts: 'file.ts', tsx: 'react.tsx' }
+   * @default { js: 'file.js', jsx: 'file.jsx', ts: 'file.ts', tsx: 'file.tsx' }
    */
   defaultFilenames?: Partial<DefaultFilenames>
 }
