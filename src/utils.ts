@@ -22,6 +22,7 @@ export function normalizeTestCase(
   const merged: Linter.Config['languageOptions'] = {
     ...languageOptions,
     ...normalized.languageOptions,
+    parser: normalized.languageOptions?.parser ?? normalized.parser ?? languageOptions?.parser,
     parserOptions: {
       ...languageOptions?.parserOptions,
       ...normalized.parserOptions,
@@ -32,6 +33,7 @@ export function normalizeTestCase(
   if (isUsingTypeScriptParser(merged)) {
     normalized.filename ||= getDefaultTypeScriptFilename(merged, defaultFilenames)
     normalized.languageOptions ||= {}
+    normalized.languageOptions.parser = merged.parser
     normalized.languageOptions.parserOptions = {
       ecmaVersion: 'latest',
       sourceType: 'module',
