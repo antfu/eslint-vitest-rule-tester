@@ -22,7 +22,7 @@ export function normalizeTestCase(
   const merged: Linter.Config['languageOptions'] = {
     ...languageOptions,
     ...normalized.languageOptions,
-    parser: languageOptions?.parser ?? normalized.parser ?? normalized.languageOptions?.parser,
+    parser: normalized.languageOptions?.parser ?? normalized.parser ?? languageOptions?.parser,
     parserOptions: {
       ...languageOptions?.parserOptions,
       ...normalized.parserOptions,
