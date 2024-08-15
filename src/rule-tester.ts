@@ -185,34 +185,35 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
     describe(options.name || 'rule-to-test', () => {
       if (cases.valid?.length) {
         describe('valid', () => {
-          for (const c of cases.valid!) {
+          cases.valid!.forEach((c, index) => {
             const _case = normalizeTestCase(c, languageOptions, defaultFilenames, 'valid')
             let run: typeof it | typeof it.only = it
             if (_case.only)
               run = it.only
             if (_case.skip)
               run = it.skip
-            run(_case.description || _case.code, async () => {
+            run(`Valid #${index}: ${_case.description || _case.code}`, async () => {
               const result = valid(_case)
               await cases?.onResult?.(_case, result)
             })
-          }
+          },
+          )
         })
       }
       if (cases.invalid?.length) {
         describe('invalid', () => {
-          for (const c of cases.invalid!) {
+          cases.invalid!.forEach((c, index) => {
             const _case = normalizeTestCase(c, languageOptions, defaultFilenames, 'invalid')
             let run: typeof it | typeof it.only = it
             if (_case.only)
               run = it.only
             if (_case.skip)
               run = it.skip
-            run(_case.description || _case.code, async () => {
+            run(`Valid #${index}: ${_case.description || _case.code}`, async () => {
               const result = invalid(_case)
               await cases?.onResult?.(_case, result)
             })
-          }
+          })
         })
       }
     })
