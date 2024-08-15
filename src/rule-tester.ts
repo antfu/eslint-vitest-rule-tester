@@ -209,7 +209,7 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
               run = it.only
             if (_case.skip)
               run = it.skip
-            run(`Valid #${index}: ${_case.description || _case.code}`, async () => {
+            run(`Invalid #${index}: ${_case.description || _case.code}`, async () => {
               const result = invalid(_case)
               await cases?.onResult?.(_case, result)
             })
