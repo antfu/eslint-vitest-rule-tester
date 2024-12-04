@@ -12,6 +12,7 @@ import type {
 import { isUsingTypeScriptParser, normalizeCaseError, normalizeTestCase } from './utils'
 import { applyFixes } from './vendor/fixer'
 import { pickFlatConfigFromOptions } from './options'
+import { getAjvInstance, getRuleOptionsSchema } from './vendor/ajv'
 
 export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
   const languageOptions = deepMerge(
@@ -84,6 +85,30 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
           ...pickFlatConfigFromOptions(testcase),
         },
       )
+
+      const schema = getRuleOptionsSchema(options.rule)
+
+      if (schema) {
+        const ajv = getAjvInstance()
+
+        ajv.validateSchema(schema)
+
+        if (ajv.errors) {
+          const errors = ajv.errors.map((error) => {
+            const field = error.dataPath[0] === '.' ? error.dataPath.slice(1) : error.dataPath
+            return `\t${field}: ${error.message}`
+          })
+
+          throw new Error(`Schema for rule ${ruleName} is invalid: ${errors}`)
+        }
+
+        try {
+          ajv.compile(schema)
+        }
+        catch (error) {
+          throw new Error(`Schema for rule ${ruleName} is invalid: ${error}`)
+        }
+      }
     }
 
     const messages = linter.verify(testcase.code!, configs, testcase.filename)
