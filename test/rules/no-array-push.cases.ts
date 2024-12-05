@@ -1,5 +1,5 @@
-import { expect } from 'vitest'
 import type { RuleTesterInitOptions, TestCasesOptions } from '../../src'
+import { expect } from 'vitest'
 import rule, { RULE_NAME } from './no-array-push'
 
 const valids = [

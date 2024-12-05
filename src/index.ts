@@ -1,5 +1,5 @@
-export type * from './types'
-export * from './utils'
+export * from './options'
 export * from './rule-tester'
 export * from './run'
-export * from './options'
+export type * from './types'
+export * from './utils'

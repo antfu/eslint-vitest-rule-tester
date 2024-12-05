@@ -1,11 +1,11 @@
+import type { Linter } from 'eslint'
+import type { DefaultFilenames, NormalizedTestCase, RuleModule, TestCase, TestCaseError } from './types'
 import path from 'node:path'
 import process from 'node:process'
-import type { Linter } from 'eslint'
 import { unindent } from '@antfu/utils'
-import type { DefaultFilenames, NormalizedTestCase, RuleModule, TestCase, TestCaseError } from './types'
 import { interpolate } from './vendor/interpolate'
 
-export { unindent, unindent as $ }
+export { unindent as $, unindent }
 
 export function normalizeTestCase(
   c: TestCase,
@@ -87,13 +87,13 @@ function getDefaultTypeScriptFilename(
   const rootPath = (isUsingTypeScriptTypings(languageOptions)
     ? languageOptions?.parserOptions?.tsconfigRootDir
     : undefined)
-    /*
+  /*
      * Can we do better than cwd?
      * This is what typescript-eslint is using though.
      *
      * @see https://github.com/typescript-eslint/typescript-eslint/blob/v8.0.0/packages/rule-tester/src/RuleTester.ts#L305
      */
-    ?? process.cwd()
+  ?? process.cwd()
 
   const filename = languageOptions?.parserOptions?.ecmaFeatures?.jsx
     ? defaultFilenames.tsx

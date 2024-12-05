@@ -1,6 +1,3 @@
-import { Linter } from 'eslint'
-import { describe, expect, it } from 'vitest'
-import { deepMerge, toArray } from '@antfu/utils'
 import type {
   InvalidTestCase,
   RuleTester,
@@ -9,10 +6,13 @@ import type {
   TestCasesOptions,
   ValidTestCase,
 } from './types'
-import { isUsingTypeScriptParser, normalizeCaseError, normalizeTestCase } from './utils'
-import { applyFixes } from './vendor/fixer'
+import { deepMerge, toArray } from '@antfu/utils'
+import { Linter } from 'eslint'
+import { describe, expect, it } from 'vitest'
 import { pickFlatConfigFromOptions } from './options'
+import { isUsingTypeScriptParser, normalizeCaseError, normalizeTestCase } from './utils'
 import { getAjvInstance, getRuleOptionsSchema } from './vendor/ajv'
+import { applyFixes } from './vendor/fixer'
 
 export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
   const languageOptions = deepMerge(
