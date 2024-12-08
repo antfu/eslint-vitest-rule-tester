@@ -1,7 +1,7 @@
 // Forked from https://github.com/eslint/eslint/blob/7fe4114be2e714506fd406ea4474430ea3de0f93/lib/config/flat-config-helpers.js and https://github.com/eslint/eslint/blob/7fe4114be2e714506fd406ea4474430ea3de0f93/lib/shared/ajv.js
 
 import Ajv from 'ajv'
-import metaSchema from 'ajv/lib/refs/json-schema-draft-04.json'
+import metaSchema from 'ajv/lib/refs/json-schema-draft-04.json' with { type: "json" }
 
 export function getAjvInstance() {
   const ajv = new Ajv({
