@@ -53,13 +53,13 @@
   "dependencies": {
     "@antfu/utils": "^0.7.10",
     "@types/eslint": "^9.6.1",
-    "@typescript-eslint/utils": "^8.17.0",
-    "ajv": "^6.12.6"
+    "@typescript-eslint/utils": "^8.17.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.11.2",
     "@antfu/ni": "^0.23.1",
     "@types/node": "^22.10.1",
+    "ajv": "^6.12.6",
     "bumpp": "^9.8.1",
     "eslint": "^9.16.0",
     "esno": "^4.8.0",

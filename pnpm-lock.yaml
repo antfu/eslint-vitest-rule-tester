@@ -17,9 +17,6 @@ importers:
       '@typescript-eslint/utils':
         specifier: ^8.17.0
         version: 8.17.0(eslint@9.16.0(jiti@2.4.1))(typescript@5.6.3)
-      ajv:
-        specifier: ^6.12.6
-        version: 6.12.6
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^3.11.2
@@ -30,6 +27,9 @@ importers:
       '@types/node':
         specifier: ^22.10.1
         version: 22.10.1
+      ajv:
+        specifier: ^6.12.6
+        version: 6.12.6
       bumpp:
         specifier: ^9.8.1
         version: 9.8.1
