@@ -2,7 +2,7 @@
   "name": "eslint-vitest-rule-tester",
   "type": "module",
   "version": "0.7.1",
-  "packageManager": "pnpm@9.14.4",
+  "packageManager": "pnpm@9.15.3",
   "description": "ESLint rule tester with Vitest",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
   "license": "MIT",
@@ -51,26 +51,26 @@
     "vitest": "^1.0.0 || ^2.0.0"
   },
   "dependencies": {
-    "@antfu/utils": "^0.7.10",
+    "@antfu/utils": "^8.0.0",
     "@types/eslint": "^9.6.1",
-    "@typescript-eslint/utils": "^8.17.0"
+    "@typescript-eslint/utils": "^8.19.1"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^3.11.2",
-    "@antfu/ni": "^0.23.1",
-    "@types/node": "^22.10.1",
+    "@antfu/eslint-config": "^3.12.2",
+    "@antfu/ni": "^23.2.0",
+    "@types/node": "^22.10.5",
     "ajv": "^6.12.6",
-    "bumpp": "^9.8.1",
-    "eslint": "^9.16.0",
+    "bumpp": "^9.10.0",
+    "eslint": "^9.17.0",
     "esno": "^4.8.0",
-    "lint-staged": "^15.2.10",
-    "pnpm": "^9.14.4",
+    "lint-staged": "^15.3.0",
+    "pnpm": "^9.15.3",
     "rimraf": "^6.0.1",
     "simple-git-hooks": "^2.11.1",
-    "taze": "^0.18.0",
-    "typescript": "~5.6.3",
-    "unbuild": "^2.0.0",
-    "vite": "^6.0.2",
+    "taze": "^18.1.0",
+    "typescript": "^5.7.3",
+    "unbuild": "^3.2.0",
+    "vite": "^6.0.7",
     "vitest": "^2.1.8"
   },
   "simple-git-hooks": {
