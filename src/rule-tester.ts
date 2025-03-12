@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-call */
 import type {
   InvalidTestCase,
   RuleTester,
@@ -47,7 +48,7 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
     ...options.defaultFilenames,
   }
 
-  function each(c: TestCase) {
+  async function each(c: TestCase) {
     const testcase = normalizeTestCase(c, languageOptions, defaultFilenames)
 
     const {
@@ -111,6 +112,8 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
       }
     }
 
+    await testcase.before?.call(testcase, configs)
+
     const messages = linter.verify(testcase.code!, configs, testcase.filename)
     // Rewrite ruleId to remove the plugin prefix
     messages.forEach((message) => {
@@ -121,7 +124,7 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
     // Verify errors
     if (testcase.errors) {
       if (typeof testcase.errors === 'function') {
-        testcase.errors(messages)
+        await testcase.errors(messages)
       }
       else if (typeof testcase.errors === 'number') {
         expect.soft(messages.length, 'number of error messages').toBe(testcase.errors)
@@ -170,7 +173,7 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
       if (testcase.output === null) // null means the output should be the same as the input
         expect(result.output, 'output').toBe(testcase.code)
       else if (typeof testcase.output === 'function') // custom assertion
-        testcase.output(result.output!, testcase.code)
+        await testcase.output(result.output!, testcase.code)
 
       else
         expect(result.output, 'output').toBe(testcase.output)
@@ -188,25 +191,29 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
       expect.soft(messages, 'no errors after fix').toEqual([])
     }
 
-    testcase.onResult?.(result)
+    await testcase.onResult?.(result)
+    await testcase.after?.call(testcase, result)
 
+    return {
+      testcase,
+      result,
+    }
+  }
+
+  async function valid(arg: ValidTestCase | string) {
+    const result = await each(arg)
+    expect.soft(result.result.messages, 'no errors on valid cases').toEqual([])
+    expect.soft(result.result.fixed, 'no need to fix for valid cases').toBeFalsy()
     return result
   }
 
-  function valid(arg: ValidTestCase | string) {
-    const result = each(arg)
-    expect.soft(result.messages, 'no errors on valid cases').toEqual([])
-    expect.soft(result.fixed, 'no need to fix for valid cases').toBeFalsy()
+  async function invalid(arg: InvalidTestCase | string) {
+    const result = await each(arg)
+    expect.soft(result.result.messages, 'expect errors').not.toEqual([])
     return result
   }
 
-  function invalid(arg: InvalidTestCase | string) {
-    const result = each(arg)
-    expect.soft(result.messages, 'expect errors').not.toEqual([])
-    return result
-  }
-
-  function run(cases: TestCasesOptions) {
+  async function run(cases: TestCasesOptions) {
     describe(options.name || 'rule-to-test', () => {
       if (cases.valid?.length) {
         describe('valid', () => {
@@ -218,8 +225,8 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
             if (_case.skip)
               run = it.skip
             run(`Valid #${index}: ${_case.description || _case.code}`, async () => {
-              const result = valid(_case)
-              await cases?.onResult?.(_case, result)
+              const { testcase, result } = await valid(_case)
+              await cases?.onResult?.(testcase, result)
             })
           },
           )
@@ -235,8 +242,8 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
             if (_case.skip)
               run = it.skip
             run(`Invalid #${index}: ${_case.description || _case.code}`, async () => {
-              const result = invalid(_case)
-              await cases?.onResult?.(_case, result)
+              const { testcase, result } = await invalid(_case)
+              await cases?.onResult?.(testcase, result)
             })
           })
         })

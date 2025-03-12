@@ -1,5 +1,6 @@
 import type { Linter } from 'eslint'
 
+export type Awaitable<T> = Promise<T> | T
 export interface ValidTestCaseBase extends CompatConfigOptions, RuleTesterBehaviorOptions {
   name?: string
   description?: string
@@ -8,6 +9,12 @@ export interface ValidTestCaseBase extends CompatConfigOptions, RuleTesterBehavi
   filename?: string
   only?: boolean
   skip?: boolean
+  before?: (this: NormalizedTestCase, configs: Linter.Config[]) => Awaitable<void>
+  after?: (this: NormalizedTestCase, result: Linter.FixReport) => Awaitable<void>
+
+  /**
+   * @deprecated Use `after` instead
+   */
   onResult?: (result: Linter.FixReport) => void
 }
 
@@ -29,12 +36,12 @@ export interface InvalidTestCaseBase extends ValidTestCaseBase {
    * If an array of strings is provided, it asserts that the error messageIds are equal to the array provided.
    * If an array of objects is provided, it asserts that the errors are partially equal to the objects provided.
    */
-  errors?: number | (string | TestCaseError)[] | ((errors: Linter.LintMessage[]) => void)
+  errors?: number | (string | TestCaseError)[] | ((errors: Linter.LintMessage[]) => Awaitable<void>)
   /**
    * Assert if output is expected.
    * Pass `null` to assert that the output is the same as the input.
    */
-  output?: string | null | ((output: string, input: string) => void)
+  output?: string | null | ((output: string, input: string) => Awaitable<void>)
 }
 
 export interface NormalizedTestCase extends InvalidTestCaseBase {
@@ -70,19 +77,19 @@ export interface RuleTester {
   /**
    * Run a single test case
    */
-  each: (arg: TestCase) => TestExecutionResult
+  each: (arg: TestCase) => Promise<{ testcase: NormalizedTestCase, result: TestExecutionResult }>
   /**
    * Run a single valid test case
    */
-  valid: (arg: ValidTestCase) => TestExecutionResult
+  valid: (arg: ValidTestCase) => Promise<{ testcase: NormalizedTestCase, result: TestExecutionResult }>
   /**
    * Run a single invalid test case
    */
-  invalid: (arg: InvalidTestCase) => TestExecutionResult
+  invalid: (arg: InvalidTestCase) => Promise<{ testcase: NormalizedTestCase, result: TestExecutionResult }>
   /**
    * ESLint's RuleTester style test runner, that runs multiple test cases
    */
-  run: (options: TestCasesOptions) => void
+  run: (options: TestCasesOptions) => Promise<void>
 }
 
 export interface RuleTesterBehaviorOptions {
