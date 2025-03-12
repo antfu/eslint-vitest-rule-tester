@@ -27,7 +27,7 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
 
   const linter = new Linter({
     configType: 'flat',
-    cwd: isUsingTypeScriptParser(options)
+    cwd: isUsingTypeScriptParser(options.languageOptions)
       ? languageOptions?.parserOptions?.tsconfigRootDir
       : undefined,
   })
