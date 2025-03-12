@@ -125,7 +125,7 @@ run({
 `onResult` field can be a function to do custom assertions with the entire result object.
 
 ```ts
-import { runClassic } from 'eslint-vitest-rule-tester'
+import { run } from 'eslint-vitest-rule-tester'
 import { expect } from 'vitest'
 
 run({

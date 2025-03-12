@@ -15,7 +15,7 @@ import { isUsingTypeScriptParser, normalizeCaseError, normalizeTestCase } from '
 import { getAjvInstance, getRuleOptionsSchema } from './vendor/ajv'
 import { applyFixes } from './vendor/fixer'
 
-export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
+export function createRuleTester<RuleOptions = any>(options: RuleTesterInitOptions): RuleTester<RuleOptions> {
   const languageOptions = deepMerge(
     options.languageOptions ?? {
       parser: options.parser,
@@ -48,7 +48,7 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
     ...options.defaultFilenames,
   }
 
-  async function each(c: TestCase) {
+  async function each(c: TestCase<RuleOptions>) {
     const testcase = normalizeTestCase(c, languageOptions, defaultFilenames)
 
     const {
@@ -200,20 +200,20 @@ export function createRuleTester(options: RuleTesterInitOptions): RuleTester {
     }
   }
 
-  async function valid(arg: ValidTestCase | string) {
+  async function valid(arg: ValidTestCase<RuleOptions> | string) {
     const result = await each(arg)
     expect.soft(result.result.messages, 'no errors on valid cases').toEqual([])
     expect.soft(result.result.fixed, 'no need to fix for valid cases').toBeFalsy()
     return result
   }
 
-  async function invalid(arg: InvalidTestCase | string) {
+  async function invalid(arg: InvalidTestCase<RuleOptions> | string) {
     const result = await each(arg)
     expect.soft(result.result.messages, 'expect errors').not.toEqual([])
     return result
   }
 
-  async function run(cases: TestCasesOptions) {
+  async function run(cases: TestCasesOptions<RuleOptions>) {
     describe(options.name || 'rule-to-test', () => {
       if (cases.valid?.length) {
         describe('valid', () => {
