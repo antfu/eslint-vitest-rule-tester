@@ -1,7 +1,7 @@
 import type { Linter } from 'eslint'
 
 export type Awaitable<T> = Promise<T> | T
-export interface ValidTestCaseBase<RuleOptions = any> extends CompatConfigOptions, RuleTesterBehaviorOptions {
+export interface ValidTestCaseBase<RuleOptions = any, MessageId extends string = string> extends CompatConfigOptions, RuleTesterBehaviorOptions {
   name?: string
   description?: string
   code: string
@@ -9,8 +9,8 @@ export interface ValidTestCaseBase<RuleOptions = any> extends CompatConfigOption
   filename?: string
   only?: boolean
   skip?: boolean
-  before?: (this: NormalizedTestCase, configs: Linter.Config[]) => Awaitable<void>
-  after?: (this: NormalizedTestCase, result: Linter.FixReport) => Awaitable<void>
+  before?: (this: NormalizedTestCase<RuleOptions, MessageId>, configs: Linter.Config[]) => Awaitable<void>
+  after?: (this: NormalizedTestCase<RuleOptions, MessageId>, result: Linter.FixReport) => Awaitable<void>
 
   /**
    * @deprecated Use `after` instead
@@ -18,7 +18,7 @@ export interface ValidTestCaseBase<RuleOptions = any> extends CompatConfigOption
   onResult?: (result: Linter.FixReport) => void
 }
 
-export interface TestCaseError extends Partial<Linter.LintMessage> {
+export type TestCaseError<MessageId extends string = string> = Partial<Linter.LintMessage> & {
   /**
    * Data for interpolate the error message
    */
@@ -27,16 +27,17 @@ export interface TestCaseError extends Partial<Linter.LintMessage> {
    * Alias to `nodeType`
    */
   type?: string
+  messageId?: MessageId
 }
 
-export interface InvalidTestCaseBase<RuleOptions = any> extends ValidTestCaseBase<RuleOptions> {
+export interface InvalidTestCaseBase<RuleOptions = any, MessageId extends string = string> extends ValidTestCaseBase<RuleOptions, MessageId> {
   /**
    * Expected errors.
    * If a number is provided, it asserts that the number of errors is equal to the number provided.
    * If an array of strings is provided, it asserts that the error messageIds are equal to the array provided.
    * If an array of objects is provided, it asserts that the errors are partially equal to the objects provided.
    */
-  errors?: number | (string | TestCaseError)[] | ((errors: Linter.LintMessage[]) => Awaitable<void>)
+  errors?: number | (MessageId | TestCaseError<MessageId>)[] | ((errors: Linter.LintMessage[]) => Awaitable<void>)
   /**
    * Assert if output is expected.
    * Pass `null` to assert that the output is the same as the input.
@@ -44,15 +45,15 @@ export interface InvalidTestCaseBase<RuleOptions = any> extends ValidTestCaseBas
   output?: string | null | ((output: string, input: string) => Awaitable<void>)
 }
 
-export interface NormalizedTestCase extends InvalidTestCaseBase {
+export interface NormalizedTestCase<RuleOptions = any, MessageId extends string = string> extends InvalidTestCaseBase<RuleOptions, MessageId> {
   type: 'valid' | 'invalid'
   code: string
 }
 
-export type InvalidTestCase<RuleOptions = any> = InvalidTestCaseBase<RuleOptions> | string
+export type InvalidTestCase<RuleOptions = any, MessageId extends string = string> = InvalidTestCaseBase<RuleOptions, MessageId> | string
 export type ValidTestCase<RuleOptions = any> = ValidTestCaseBase<RuleOptions> | string
 
-export type TestCase<RuleOptions = any> = ValidTestCase<RuleOptions> | InvalidTestCase<RuleOptions>
+export type TestCase<RuleOptions = any, MessageId extends string = string> = ValidTestCase<RuleOptions> | InvalidTestCase<RuleOptions, MessageId>
 
 export interface TestExecutionResult extends Linter.FixReport {
   /**
@@ -73,23 +74,23 @@ export interface CompatConfigOptions {
 
 export type RuleModule = any // to allow any rule module
 
-export interface RuleTester<RuleOptions = any> {
+export interface RuleTester<RuleOptions = any, MessageId extends string = string> {
   /**
    * Run a single test case
    */
-  each: (arg: TestCase<RuleOptions>) => Promise<{ testcase: NormalizedTestCase, result: TestExecutionResult }>
+  each: (arg: TestCase<RuleOptions, MessageId>) => Promise<{ testcase: NormalizedTestCase<RuleOptions, MessageId>, result: TestExecutionResult }>
   /**
    * Run a single valid test case
    */
-  valid: (arg: ValidTestCase<RuleOptions>) => Promise<{ testcase: NormalizedTestCase, result: TestExecutionResult }>
+  valid: (arg: ValidTestCase<RuleOptions>) => Promise<{ testcase: NormalizedTestCase<RuleOptions, MessageId>, result: TestExecutionResult }>
   /**
    * Run a single invalid test case
    */
-  invalid: (arg: InvalidTestCase<RuleOptions>) => Promise<{ testcase: NormalizedTestCase, result: TestExecutionResult }>
+  invalid: (arg: InvalidTestCase<RuleOptions, MessageId>) => Promise<{ testcase: NormalizedTestCase<RuleOptions, MessageId>, result: TestExecutionResult }>
   /**
    * ESLint's RuleTester style test runner, that runs multiple test cases
    */
-  run: (options: TestCasesOptions<RuleOptions>) => Promise<void>
+  run: (options: TestCasesOptions<RuleOptions, MessageId>) => Promise<void>
 }
 
 export interface RuleTesterBehaviorOptions {
@@ -137,11 +138,11 @@ export interface RuleTesterInitOptions extends CompatConfigOptions, RuleTesterBe
   defaultFilenames?: Partial<DefaultFilenames>
 }
 
-export interface TestCasesOptions<RuleOptions = any> {
+export interface TestCasesOptions<RuleOptions = any, MessageId extends string = string> {
   valid?: (ValidTestCase<RuleOptions> | string)[]
-  invalid?: (InvalidTestCase<RuleOptions> | string)[]
+  invalid?: (InvalidTestCase<RuleOptions, MessageId> | string)[]
   /**
    * Callback to be called after each test case
    */
-  onResult?: (_case: NormalizedTestCase, result: Linter.FixReport) => void | Promise<void>
+  onResult?: (_case: NormalizedTestCase<RuleOptions, MessageId>, result: Linter.FixReport) => void | Promise<void>
 }

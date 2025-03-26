@@ -4,21 +4,21 @@ import { createRuleTester } from './rule-tester'
 /**
  * Shortcut to run test cases for a rule
  */
-export function run<RuleOptions = any>(options: TestCasesOptions<RuleOptions> & RuleTesterInitOptions) {
-  const tester = createRuleTester<RuleOptions>(options)
+export function run<RuleOptions = any, MessageId extends string = string>(options: TestCasesOptions<RuleOptions, MessageId> & RuleTesterInitOptions) {
+  const tester = createRuleTester<RuleOptions, MessageId>(options)
   return tester.run(options)
 }
 
 /**
  * Shortcut to run test cases for a rule in classic style
  */
-export function runClassic<RuleOptions = any>(
+export function runClassic<RuleOptions = any, MessageId extends string = string>(
   ruleName: string,
   rule: RuleModule,
-  cases: TestCasesOptions<RuleOptions>,
+  cases: TestCasesOptions<RuleOptions, MessageId>,
   options?: RuleTesterInitOptions,
 ) {
-  const tester = createRuleTester<RuleOptions>({
+  const tester = createRuleTester<RuleOptions, MessageId>({
     rule,
     name: ruleName,
     ...options,
