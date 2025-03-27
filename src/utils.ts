@@ -7,16 +7,16 @@ import { interpolate } from './vendor/interpolate'
 
 export { unindent as $, unindent }
 
-export function normalizeTestCase(
-  c: TestCase,
+export function normalizeTestCase<RuleOptions = any, MessageId extends string = string>(
+  c: TestCase<RuleOptions, MessageId>,
   languageOptions: Linter.Config['languageOptions'],
   defaultFilenames: DefaultFilenames,
   type?: 'valid' | 'invalid',
-): NormalizedTestCase {
+): NormalizedTestCase<RuleOptions, MessageId> {
   const obj = typeof c === 'string'
     ? { code: c }
     : { ...c }
-  const normalized = obj as NormalizedTestCase
+  const normalized = obj as NormalizedTestCase<RuleOptions, MessageId>
   normalized.type ||= type || (('errors' in obj || 'output' in obj) ? 'invalid' : 'valid')
 
   const merged: Linter.Config['languageOptions'] = {
@@ -47,7 +47,7 @@ export function normalizeTestCase(
   return normalized
 }
 
-export function normalizeCaseError(error: TestCaseError | string, rule?: RuleModule): Partial<Linter.LintMessage> {
+export function normalizeCaseError<MessageId extends string = string>(error: TestCaseError<MessageId> | MessageId, rule?: RuleModule): Partial<Linter.LintMessage> {
   if (typeof error === 'string')
     return { messageId: error }
   const clone = { ...error }
