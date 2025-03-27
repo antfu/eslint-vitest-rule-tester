@@ -136,7 +136,7 @@ export function createRuleTester<RuleOptions = any, MessageId extends string = s
         expect(messages.length, 'number of error messages').toBe(errors.length)
 
         errors.forEach((e, i) => {
-          expect.soft(messages[i], 'error massage object').toMatchObject(e)
+          expect.soft(messages[i], 'error message object').toMatchObject(e)
         })
       }
     }
