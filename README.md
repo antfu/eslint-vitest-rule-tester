@@ -170,7 +170,7 @@ describe('rule-name', () => {
   })
 
   it('invalid case 1 with snapshot', () => {
-    const result = invalid({
+    const { result } = await invalid({
       code: 'const foo = 1',
       errors: ['error-message-id'],
     })
