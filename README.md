@@ -17,6 +17,8 @@ Provides a better testing experience, supports snapshoting, and does not require
 - [ESLint Stylistic](https://github.com/eslint-stylistic/eslint-stylistic/blob/main/packages/eslint-plugin-js/rules/array-bracket-newline/array-bracket-newline.test.ts)
 - [eslint-plugin-command](https://github.com/antfu/eslint-plugin-command/blob/main/src/commands/inline-arrow.test.ts)
 - [eslint-plugin-antfu](https://github.com/antfu/eslint-plugin-antfu/blob/main/src/rules/consistent-list-newline.test.ts)
+- [eslint-plugin-perfectionist](https://github.com/azat-io/eslint-plugin-perfectionist/blob/main/test/rules/sort-imports.test.ts)
+- [eslint-plugin-de-morgan](https://github.com/azat-io/eslint-plugin-de-morgan/blob/main/test/rules/no-negated-conjunction.test.ts)
 
 ## Install
 
