@@ -6,3 +6,6 @@ packages:
 onlyBuiltDependencies:
   - esbuild
   - simple-git-hooks
+
+ignoreWorkspaceRootCheck: true
+shellEmulator: true

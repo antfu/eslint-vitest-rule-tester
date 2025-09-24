@@ -224,7 +224,7 @@ export function createRuleTester<RuleOptions = any, MessageId extends string = s
               run = it.only
             if (_case.skip)
               run = it.skip
-            run(`Valid #${index}: ${_case.description || _case.code}`, async () => {
+            run(`Valid #${index}: ${_case.description || _case.code}`, { timeout: 10000 }, async () => {
               const { testcase, result } = await valid(_case)
               await cases?.onResult?.(testcase, result)
             })
