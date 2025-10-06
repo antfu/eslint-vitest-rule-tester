@@ -25,6 +25,7 @@ export type TestCaseError<MessageId extends string = string> = Partial<Linter.Li
   data?: Record<string, any>
   /**
    * Alias to `nodeType`
+   * @deprecated `nodeType` is deprecated and will be removed in the next major version.
    */
   type?: string
   messageId?: MessageId
