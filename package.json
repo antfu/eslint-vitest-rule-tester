@@ -20,17 +20,17 @@
   ],
   "sideEffects": false,
   "exports": {
-    ".": "./dist/index.mjs"
+    ".": "./dist/index.js"
   },
-  "main": "./dist/index.mjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.mts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "unbuild",
-    "dev": "unbuild --stub",
+    "build": "tsdown",
+    "watch": "tsdown --watch",
     "lint": "eslint",
     "prepublishOnly": "nr build",
     "release": "bumpp",
@@ -59,9 +59,9 @@
     "lint-staged": "^16.2.0",
     "simple-git-hooks": "^2.13.1",
     "taze": "^19.7.0",
+    "tsdown": "^0.15.6",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
-    "unbuild": "^3.6.1",
     "vite": "^7.1.7",
     "vitest": "^3.2.4"
   },
