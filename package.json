@@ -1,7 +1,7 @@
 {
   "name": "eslint-vitest-rule-tester",
   "type": "module",
-  "version": "2.2.2",
+  "version": "2.3.0",
   "packageManager": "pnpm@10.18.3",
   "description": "ESLint rule tester with Vitest",
   "author": "Anthony Fu <anthonyfu117@hotmail.com>",
